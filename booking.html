@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Stay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f8f8f0;
+            /* Off-white background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #e6e0d4;
+            /* Beige */
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #222;
+            /* Almost black */
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #222;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #887a5f;
+            /* Darker beige */
+        }
+
+        .main-content {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .booking-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #222;
+            font-size: 32px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1 0 300px;
+            margin: 0 10px 20px 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            font-size: 16px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #887a5f;
+            box-shadow: 0 0 5px rgba(136, 122, 95, 0.5);
+        }
+
+        .btn-book {
+            background-color: #222;
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            display: block;
+            margin: 30px auto 0;
+            transition: background-color 0.3s;
+        }
+
+        .btn-book:hover {
+            background-color: #333;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0d0d0d;
+            /* Darker black */
+            color: #f5f5f0;
+            /* Off-white text */
+            padding: 60px 5% 20px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: #d6cba9;
+            /* Beige underline */
+        }
+
+        .footer-col p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #aaa;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #d6cba9;
+            /* Beige text on hover */
+            padding-left: 5px;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #aaa;
+        }
+
+        .contact-icon {
+            margin-right: 10px;
+            color: #d6cba9;
+            /* Beige icon */
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #222;
+            border-radius: 50%;
+            color: #f5f5f0;
+            /* Off-white text */
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background-color: #d6cba9;
+            /* Beige background on hover */
+            color: #161616;
+            /* Black text on hover */
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #222;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .form-group {
+                flex: 1 0 100%;
+                margin: 0 0 20px 0;
+            }
+
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 20px;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ✅ Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">LIVEHOMELY</div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('rooms') }}">ROOMS</a></li>
+                    <li><a href="{{ url_for('user_dashboard') }}">HOME</a></li>
+                    <li><a href="{{ url_for('about') }}">ABOUT</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ✅ Main Content -->
+    <div class="main-content">
+        <div class="booking-container">
+            <h1>Book Your Stay</h1>
+
+            <div class="container">
+                <h2>Room Booking - {{ room.room_type }}</h2>
+
+                <!-- ✅ Display Room Details -->
+                <div id="room-details">
+                    <p>You are booking Room ID: <strong>{{ room.room_id }}</strong> of type: <strong>{{ room.room_type }}</strong></p>
+                </div>
+
+                <!-- ✅ Booking Form -->
+                <form id="bookingForm" action="{{ url_for('submit_booking') }}" method="POST">
+                    <input type="hidden" name="room_id" value="{{ room.room_id }}">
+                    <input type="hidden" name="user_id" value="{{ session['user_id'] }}">
+
+                    <!-- ✅ Check-in Date -->
+                    <label for="check_in">Check-in Date:</label>
+                    <input type="date" id="check_in" name="check_in" required>
+
+                    <!-- ✅ Check-out Date -->
+                    <label for="check_out">Check-out Date:</label>
+                    <input type="date" id="check_out" name="check_out" required>
+
+                    <!-- ✅ Number of Guests -->
+                    <label for="guests">Guests:</label>
+                    <input type="number" id="guests" name="guests" min="1" max="10" required>
+
+                    <!-- ✅ Submit Button -->
+                    <button type="submit">Book Room</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ Footer -->
+    <footer>
+        <div class="footer-container">
+            <!-- Footer Columns -->
+            <div class="footer-col">
+                <h3>LiveHomely</h3>
+                <p>Experience luxury like never before with our premium accommodations and world-class service.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="room.html">Rooms & Suites</a></li>
+                    <li><a href="#">Booking</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Special Offers</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Sitemap</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt contact-icon"></i>
+                    <span>Nirvana Shopper</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-phone-alt contact-icon"></i>
+                    <span>+91 9726435592</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-envelope contact-icon"></i>
+                    <span>livehomely@gmail.com</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright">
+            &copy; 2025 LiveHomely Hotel. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- ✅ JavaScript for Dynamic Date Validation -->
+    <script>
+        // Set minimum dates on page load
+        window.onload = () => {
+            const today = new Date();
+            const formattedToday = today.toISOString().split('T')[0];
+
+            const checkInInput = document.getElementById('check_in');
+            const checkOutInput = document.getElementById('check_out');
+
+            // Set minimum check-in date
+            checkInInput.min = formattedToday;
+
+            // ✅ Dynamically update checkout date based on check-in selection
+            checkInInput.addEventListener('change', () => {
+                const checkInDate = new Date(checkInInput.value);
+                if (!checkInDate) return;
+
+                // Set checkout min to 1 day after check-in
+                const minCheckoutDate = new Date(checkInDate);
+                minCheckoutDate.setDate(minCheckoutDate.getDate() + 1);
+
+                // Set max checkout date to 7 days after check-in
+                const maxCheckoutDate = new Date(checkInDate);
+                maxCheckoutDate.setDate(maxCheckoutDate.getDate() + 7);
+
+                // Update checkout date range
+                checkOutInput.min = minCheckoutDate.toISOString().split('T')[0];
+                checkOutInput.max = maxCheckoutDate.toISOString().split('T')[0];
+            });
+        };
+    </script>
+
+</body>
+</html>

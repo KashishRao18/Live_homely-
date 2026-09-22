@@ -1,0 +1,249 @@
+<!-- templates/payment.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Hotel Reservation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f0f0, #d9e4f5);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            background: #4CAF50;
+            color: #fff;
+            padding: 12px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #45a049;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #007BFF;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <a href="{{ url_for('user_dashboard') }}" class="back-btn">← Back to Dashboard</a>
+        <h2>Payment Details</h2>
+
+        <!-- Booking Summary Section -->
+        <div class="form-group">
+            <label>Booking ID:</label>
+            <input type="text" value="{{ booking.booking_id }}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Room:</label>
+            <input type="text" value="Room {{ booking.room_id }}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Check-in Date:</label>
+            <input type="text" value="{{ booking.check_in }}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Check-out Date:</label>
+            <input type="text" value="{{ booking.check_out }}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Guests:</label>
+            <input type="text" value="{{ booking.guests }}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Total Amount:</label>
+            <input type="text" value="₹{{ booking.total_amount }}" readonly>
+        </div>
+
+        <!-- Payment Form -->
+        <form method="POST" action="{{ url_for('process_payment', booking_id=booking.booking_id) }}">
+
+            <div class="form-group">
+                <label>Payment Method:</label>
+                <select name="payment_method" id="payment_method" required>
+                    <option value="card">Credit/Debit Card</option>
+                    <option value="upi">UPI</option>
+                    <option value="net_banking">Net Banking</option>
+                </select>
+            </div>
+            <!-- Card Payment Fields -->
+            <div id="card-fields" class="form-group">
+                <label>Card Number:</label>
+                <input type="text" name="card_number" id="card_number" maxlength="16" placeholder="1234567812345678">
+                <div class="error-msg" id="card_number_error"></div>
+
+                <label>Expiry Date:</label>
+                <input type="month" name="expiry_date" id="expiry_date">
+                <div class="error-msg" id="expiry_date_error"></div>
+
+                <label>CVV:</label>
+                <input type="text" name="cvv" id="cvv" maxlength="3" placeholder="123">
+                <div class="error-msg" id="cvv_error"></div>
+            </div>
+
+            <!-- UPI -->
+            <div id="upi-fields" class="form-group" style="display:none;">
+                <label>UPI ID:</label>
+                <input type="text" name="upi_id" id="upi_id" placeholder="example@upi">
+                <div class="error-msg" id="upi_id_error"></div>
+            </div>
+
+            <!-- Net Banking -->
+            <div id="net-banking-fields" class="form-group" style="display:none;">
+                <label>Bank Name:</label>
+                <input type="text" name="bank_name" id="bank_name" placeholder="Enter Bank Name">
+                <div class="error-msg" id="bank_name_error"></div>
+            </div>
+
+
+            <button type="submit" class="btn">Make Payment</button>
+        </form>
+    </div>
+    <!-- Add inside <head> or before </body> -->
+    <style>
+        .error-msg {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+
+    <script>
+        const paymentForm = document.querySelector("form");
+
+        paymentForm.addEventListener("submit", function (e) {
+            let valid = true;
+
+            // Clear all error messages
+            document.querySelectorAll(".error-msg").forEach(el => el.innerText = "");
+
+            const method = document.getElementById("payment_method").value;
+
+            if (method === "card") {
+                const cardNum = document.getElementById("card_number").value.trim();
+                const expiry = document.getElementById("expiry_date").value;
+                const cvv = document.getElementById("cvv").value.trim();
+
+                if (!/^\d{16}$/.test(cardNum)) {
+                    document.getElementById("card_number_error").innerText = "Card number must be 16 digits.";
+                    valid = false;
+                }
+
+                if (!expiry) {
+                    document.getElementById("expiry_date_error").innerText = "Please select an expiry date.";
+                    valid = false;
+                }
+
+                if (!/^\d{3}$/.test(cvv)) {
+                    document.getElementById("cvv_error").innerText = "CVV must be 3 digits.";
+                    valid = false;
+                }
+            }
+
+            if (method === "upi") {
+                const upiID = document.getElementById("upi_id").value.trim();
+                const upiPattern = /^[\w.-]+@[\w.-]+$/;
+                if (!upiPattern.test(upiID)) {
+                    document.getElementById("upi_id_error").innerText = "Please enter a valid UPI ID (example@upi).";
+                    valid = false;
+                }
+            }
+
+            if (method === "net_banking") {
+                const bankName = document.getElementById("bank_name").value.trim();
+                if (bankName.length < 3 || !/[A-Za-z]/.test(bankName)) {
+                    document.getElementById("bank_name_error").innerText = "Please enter a valid bank name.";
+                    valid = false;
+                }
+            }
+
+            if (!valid) {
+                e.preventDefault(); // Stop form from submitting
+            }
+        });
+
+        // Payment Method Toggle Logic
+        const paymentMethodSelect = document.getElementById('payment_method');
+        const cardFields = document.getElementById('card-fields');
+        const upiFields = document.getElementById('upi-fields');
+        const netBankingFields = document.getElementById('net-banking-fields');
+
+        paymentMethodSelect.addEventListener('change', () => {
+            const method = paymentMethodSelect.value;
+
+            cardFields.style.display = (method === 'card') ? 'block' : 'none';
+            upiFields.style.display = (method === 'upi') ? 'block' : 'none';
+            netBankingFields.style.display = (method === 'net_banking') ? 'block' : 'none';
+        });
+    </script>
+
+
+</body>
+
+</html>

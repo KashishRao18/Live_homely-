@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Available Rooms</h2>
+    <div class="row">
+        {% for room in rooms %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <!-- Display Room Image -->
+                <img src="{{ url_for('static', filename=room.room_image) }}" 
+     class="card-img-top" 
+     alt="{{ room.room_type }}" 
+     style="height: 350px; width: 100%; object-fit: cover; border-radius: 12px;">
+
+
+            
+                <div class="card-body">
+                    <h5 class="card-title">{{ room.room_type }}</h5>
+                    <p class="card-text">Price: ₹{{ room.price }}</p>
+                    <p class="card-text">{{ room.description }}</p>
+                    <p class="card-text">Amenities: {{ room.amenity }}</p>
+                    <p class="card-text">Availability: 
+                        {% if room.availability %} ✅ Available {% else %} ❌ Not Available {% endif %}
+                    </p>
+                    {% if admin==False %}
+                        <a href="{{ url_for('booking', room_id=room.room_id, type=room.room_type) }}" class="btn btn-primary">Book Now</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
